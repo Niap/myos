@@ -1,12 +1,15 @@
 ; naskfunc
 ; TAB=4
 
-[FORMAT "WCOFF"]				; ƒIƒuƒWƒFƒNƒgƒtƒ@ƒCƒ‹‚ğì‚éƒ‚[ƒh	
-[INSTRSET "i486p"]				; 486‚Ì–½—ß‚Ü‚Åg‚¢‚½‚¢‚Æ‚¢‚¤‹Lq
-[BITS 32]						; 32ƒrƒbƒgƒ‚[ƒh—p‚Ì‹@ŠBŒê‚ğì‚ç‚¹‚é
-[FILE "naskfunc.nas"]			; ƒ\[ƒXƒtƒ@ƒCƒ‹–¼î•ñ
+[FORMAT "WCOFF"]				; åƒ†åƒ½åƒ•åƒƒåƒ‹åƒ©åƒ¼å‚½åƒ€å„–å‚ªå¶Œå‚å„Œä¹•åƒª	
+[INSTRSET "i486p"]				; 486åºæŸ¦æ¤·å‚‘å±å·Šå„å¨å„å²å„å†å©°å¼
+[BITS 32]						; 32åƒ¹åƒ¢åƒ©å„Œä¹•åƒªæ¢¡åºå©¡å¤¿å²…å‚ªå¶Œå‚œå£å‚
+[FILE "naskfunc.nas"]			; åƒœä¹•åƒ—åƒ¼å‚½åƒ€å„–æŸ¤å¿£æ›¬
 
-		GLOBAL	_io_hlt,_write_mem8
+		GLOBAL	_io_hlt, _io_cli, _io_sti, _io_stihlt
+		GLOBAL	_io_in8,  _io_in16,  _io_in32
+		GLOBAL	_io_out8, _io_out16, _io_out32
+		GLOBAL	_io_load_eflags, _io_store_eflags
 
 [SECTION .text]
 
@@ -14,8 +17,61 @@ _io_hlt:	; void io_hlt(void);
 		HLT
 		RET
 
-_write_mem8:	; void write_mem8(int addr, int data);
-		MOV		ECX,[ESP+4]		; [ESP+4]‚Éaddr‚ª“ü‚Á‚Ä‚¢‚é‚Ì‚Å‚»‚ê‚ğECX‚É“Ç‚İ‚Ş
-		MOV		AL,[ESP+8]		; [ESP+8]‚Édata‚ª“ü‚Á‚Ä‚¢‚é‚Ì‚Å‚»‚ê‚ğAL‚É“Ç‚İ‚Ş
-		MOV		[ECX],AL
+_io_cli:	; void io_cli(void);
+		CLI
+		RET
+
+_io_sti:	; void io_sti(void);
+		STI
+		RET
+
+_io_stihlt:	; void io_stihlt(void);
+		STI
+		HLT
+		RET
+
+_io_in8:	; int io_in8(int port);
+		MOV		EDX,[ESP+4]		; port
+		MOV		EAX,0
+		IN		AL,DX
+		RET
+
+_io_in16:	; int io_in16(int port);
+		MOV		EDX,[ESP+4]		; port
+		MOV		EAX,0
+		IN		AX,DX
+		RET
+
+_io_in32:	; int io_in32(int port);
+		MOV		EDX,[ESP+4]		; port
+		IN		EAX,DX
+		RET
+
+_io_out8:	; void io_out8(int port, int data);
+		MOV		EDX,[ESP+4]		; port
+		MOV		AL,[ESP+8]		; data
+		OUT		DX,AL
+		RET
+
+_io_out16:	; void io_out16(int port, int data);
+		MOV		EDX,[ESP+4]		; port
+		MOV		EAX,[ESP+8]		; data
+		OUT		DX,AX
+		RET
+
+_io_out32:	; void io_out32(int port, int data);
+		MOV		EDX,[ESP+4]		; port
+		MOV		EAX,[ESP+8]		; data
+		OUT		DX,EAX
+		RET
+
+_io_load_eflags:	; int io_load_eflags(void);
+		PUSHFD		; PUSH EFLAGS å²å„å†å „æ´
+		POP		EAX
+		RET
+
+_io_store_eflags:	; void io_store_eflags(int eflags);
+		MOV		EAX,[ESP+4]
+		PUSH	EAX
+		POPFD		; POP EFLAGS å²å„å†å „æ´
 		RET
