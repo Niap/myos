@@ -11,7 +11,7 @@ MAKEFONT = $(TOOLPATH)makefont.exe
 BIN2OBJ  = $(TOOLPATH)bin2obj.exe
 
 COPY     = copy
-DEL      = rm
+DEL      = del
 
 # �f�t�H���g����
 
@@ -46,7 +46,7 @@ bootpack.bim : bootpack.obj naskfunc.obj hankaku.obj graphic.obj dsctbl.obj Make
 		bootpack.obj naskfunc.obj hankaku.obj graphic.obj dsctbl.obj
 		
 haribote.sys : asmhead.bin bootpack.hrb Makefile
-	cat asmhead.bin bootpack.hrb > haribote.sys
+	copy /B asmhead.bin+bootpack.hrb haribote.sys
 
 haribote.img : ipl10.bin haribote.sys Makefile
 	$(EDIMG)   imgin:../z_tools/fdimg0at.tek \
