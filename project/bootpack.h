@@ -77,8 +77,9 @@ void set_gatedesc(struct GATE_DESCRIPTOR *gd, int offset, int selector, int ar);
 
 
 /* int.c */
-struct KEYBUF {
-	unsigned char data, flag;
+struct FIFO8 {
+	unsigned char *buf;
+	int p, q, size, free, flags;
 };
 void init_pic(void);
 void inthandler21(int *esp);
