@@ -70,11 +70,7 @@ img :
 clean :
 	-$(DEL) *.bin
 	-$(DEL) *.lst
-	-$(DEL) *.gas
 	-$(DEL) *.obj
-	-$(DEL) dsctbl.nas
-	-$(DEL) graphic.nas
-	-$(DEL) bootpack.nas
 	-$(DEL) bootpack.map
 	-$(DEL) bootpack.hrb
 	-$(DEL) bootpack.bim

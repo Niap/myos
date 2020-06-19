@@ -24,15 +24,21 @@ void init_pic(void)
 	return;
 }
 
+
+#define PORT_KEYDAT		0x0060
+struct KEYBUF keybuf;
+
 void inthandler21(int *esp)
 /* 来自PS/2键盘的中断 */
 {
-	struct BOOTINFO *binfo = (struct BOOTINFO *) ADR_BOOTINFO;
-	boxfill8(binfo->vram, binfo->scrnx, COL8_000000, 0, 0, 32 * 8 - 1, 15);
-	putfonts8_asc(binfo->vram, binfo->scrnx, 0, 0, COL8_FFFFFF, "INT 21 (IRQ-1) : PS/2 keyboard");
-	for (;;) {
-		io_hlt();
+    unsigned char data;
+	io_out8(PIC0_OCW2, 0x61);	/* IRQ-01��t������PIC�ɒʒm */
+	data = io_in8(PORT_KEYDAT);
+	if (keybuf.flag == 0) {
+		keybuf.data = data;
+		keybuf.flag = 1;
 	}
+	return;
 }
 
 
