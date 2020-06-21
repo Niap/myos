@@ -49,7 +49,7 @@ void sheet_updown(struct SHTCTL *ctl, struct SHEET *sht, int height)
 {
 	int h, old = sht->height; /* �ݒ�O�̍������L������ */
 
-	/* �w�肪�Ⴗ���⍂������������A�C������ */
+	/* */
 	if (height > ctl->top + 1) {
 		height = ctl->top + 1;
 	}
@@ -58,10 +58,9 @@ void sheet_updown(struct SHTCTL *ctl, struct SHEET *sht, int height)
 	}
 	sht->height = height; /* ������ݒ� */
 
-	/* �ȉ��͎��sheets[]�̕��בւ� */
-	if (old > height) {	/* �ȑO�����Ⴍ�Ȃ� */
+	/* sheets 重新排序 */
+	if (old > height) {
 		if (height >= 0) {
-			/* �Ԃ̂��̂������グ�� */
 			for (h = old; h > height; h--) {
 				ctl->sheets[h] = ctl->sheets[h - 1];
 				ctl->sheets[h]->height = h;
@@ -75,7 +74,7 @@ void sheet_updown(struct SHTCTL *ctl, struct SHEET *sht, int height)
 					ctl->sheets[h]->height = h;
 				}
 			}
-			ctl->top--; /* �\�����̉������������̂ŁA��ԏ�̍��������� */
+			ctl->top--;
 		}
 		sheet_refresh(ctl); /* �V�����������̏��ɉ����ĉ�ʂ�`������ */
 	} else if (old < height) {	/* �ȑO���������Ȃ� */
