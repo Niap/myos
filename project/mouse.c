@@ -2,24 +2,28 @@
 
 #include "bootpack.h"
 
-struct FIFO8 mousefifo;
+struct FIFO32 *mousefifo;
+int mousedata0;
 
 void inthandler2c(int *esp)
 /* PS/2�}�E�X����̊��荞�� */
 {
-	unsigned char data;
+	int data;
 	io_out8(PIC1_OCW2, 0x64);	/* IRQ-12��t������PIC1�ɒʒm */
 	io_out8(PIC0_OCW2, 0x62);	/* IRQ-02��t������PIC0�ɒʒm */
 	data = io_in8(PORT_KEYDAT);
-	fifo8_put(&mousefifo, data);
+	fifo32_put(mousefifo, data + mousedata0);
 	return;
 }
 
 #define KEYCMD_SENDTO_MOUSE		0xd4
 #define MOUSECMD_ENABLE			0xf4
 
-void enable_mouse(struct MOUSE_DEC *mdec)
+void enable_mouse(struct FIFO32 *fifo, int data0, struct MOUSE_DEC *mdec)
 {
+	/* �������ݐ��FIFO�o�b�t�@���L�� */
+	mousefifo = fifo;
+	mousedata0 = data0;
 	/* �}�E�X�L�� */
 	wait_KBC_sendready();
 	io_out8(PORT_KEYCMD, KEYCMD_SENDTO_MOUSE);

@@ -1,39 +1,38 @@
+/* �O���t�B�b�N�����֌W */
 
 #include "bootpack.h"
-
 
 void init_palette(void)
 {
 	static unsigned char table_rgb[16 * 3] = {
-		0x00, 0x00, 0x00,	/*  0:崟 */
-		0xff, 0x00, 0x00,	/*  1:柧傞偄愒 */
-		0x00, 0xff, 0x00,	/*  2:柧傞偄椢 */
-		0xff, 0xff, 0x00,	/*  3:柧傞偄墿怓 */
-		0x00, 0x00, 0xff,	/*  4:柧傞偄惵 */
-		0xff, 0x00, 0xff,	/*  5:柧傞偄巼 */
-		0x00, 0xff, 0xff,	/*  6:柧傞偄悈怓 */
-		0xff, 0xff, 0xff,	/*  7:敀 */
-		0xc6, 0xc6, 0xc6,	/*  8:柧傞偄奃怓 */
-		0x84, 0x00, 0x00,	/*  9:埫偄愒 */
-		0x00, 0x84, 0x00,	/* 10:埫偄椢 */
-		0x84, 0x84, 0x00,	/* 11:埫偄墿怓 */
-		0x00, 0x00, 0x84,	/* 12:埫偄惵 */
-		0x84, 0x00, 0x84,	/* 13:埫偄巼 */
-		0x00, 0x84, 0x84,	/* 14:埫偄悈怓 */
-		0x84, 0x84, 0x84	/* 15:埫偄奃怓 */
+		0x00, 0x00, 0x00,	/*  0:�� */
+		0xff, 0x00, 0x00,	/*  1:���邢�� */
+		0x00, 0xff, 0x00,	/*  2:���邢�� */
+		0xff, 0xff, 0x00,	/*  3:���邢���F */
+		0x00, 0x00, 0xff,	/*  4:���邢�� */
+		0xff, 0x00, 0xff,	/*  5:���邢�� */
+		0x00, 0xff, 0xff,	/*  6:���邢���F */
+		0xff, 0xff, 0xff,	/*  7:�� */
+		0xc6, 0xc6, 0xc6,	/*  8:���邢�D�F */
+		0x84, 0x00, 0x00,	/*  9:�Â��� */
+		0x00, 0x84, 0x00,	/* 10:�Â��� */
+		0x84, 0x84, 0x00,	/* 11:�Â����F */
+		0x00, 0x00, 0x84,	/* 12:�Â��� */
+		0x84, 0x00, 0x84,	/* 13:�Â��� */
+		0x00, 0x84, 0x84,	/* 14:�Â����F */
+		0x84, 0x84, 0x84	/* 15:�Â��D�F */
 	};
 	set_palette(0, 15, table_rgb);
 	return;
 
-	/* static char 柦椷偼丄僨乕僞偵偟偐巊偊側偄偗偳DB柦椷憡摉 */
+	/* static char ���߂́A�f�[�^�ɂ����g���Ȃ�����DB���ߑ��� */
 }
-
 
 void set_palette(int start, int end, unsigned char *rgb)
 {
 	int i, eflags;
-	eflags = io_load_eflags();	/* 妱傝崬傒嫋壜僼儔僌偺抣傪婰榐偡傞 */
-	io_cli(); 					/* 嫋壜僼儔僌傪0偵偟偰妱傝崬傒嬛巭偵偡傞 */
+	eflags = io_load_eflags();	/* ���荞�݋��t���O�̒l���L�^���� */
+	io_cli(); 					/* ���t���O��0�ɂ��Ċ��荞�݋֎~�ɂ��� */
 	io_out8(0x03c8, start);
 	for (i = start; i <= end; i++) {
 		io_out8(0x03c9, rgb[0] / 4);
@@ -41,21 +40,19 @@ void set_palette(int start, int end, unsigned char *rgb)
 		io_out8(0x03c9, rgb[2] / 4);
 		rgb += 3;
 	}
-	io_store_eflags(eflags);	/* 妱傝崬傒嫋壜僼儔僌傪尦偵栠偡 */
+	io_store_eflags(eflags);	/* ���荞�݋��t���O�����ɖ߂� */
 	return;
 }
 
-// xsize表示整个屏幕的像素个数
-void boxfill8(unsigned char * vram,int xsize,unsigned char c,int x0,int y0,int x1,int y1){
-	int x,y;
-	for(y=y0;y<=y1;y++){
-		for(x=x0;x<=x1;x++){
-			vram[y*xsize+x] = c;
-		}
+void boxfill8(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, int x1, int y1)
+{
+	int x, y;
+	for (y = y0; y <= y1; y++) {
+		for (x = x0; x <= x1; x++)
+			vram[y * xsize + x] = c;
 	}
 	return;
 }
-
 
 void init_screen8(char *vram, int x, int y)
 {
@@ -157,5 +154,3 @@ void putblock8_8(char *vram, int vxsize, int pxsize,
 	}
 	return;
 }
-
-

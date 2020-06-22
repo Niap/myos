@@ -1,9 +1,10 @@
+/* FIFO���C�u���� */
 
 #include "bootpack.h"
 
 #define FLAGS_OVERRUN		0x0001
 
-void fifo8_init(struct FIFO8 *fifo, int size, unsigned char *buf)
+void fifo32_init(struct FIFO32 *fifo, int size, int *buf)
 /* FIFO�o�b�t�@�̏����� */
 {
 	fifo->size = size;
@@ -15,7 +16,7 @@ void fifo8_init(struct FIFO8 *fifo, int size, unsigned char *buf)
 	return;
 }
 
-int fifo8_put(struct FIFO8 *fifo, unsigned char data)
+int fifo32_put(struct FIFO32 *fifo, int data)
 /* FIFO�փf�[�^�𑗂荞��Œ~���� */
 {
 	if (fifo->free == 0) {
@@ -32,7 +33,7 @@ int fifo8_put(struct FIFO8 *fifo, unsigned char data)
 	return 0;
 }
 
-int fifo8_get(struct FIFO8 *fifo)
+int fifo32_get(struct FIFO32 *fifo)
 /* FIFO����f�[�^����Ƃ��Ă��� */
 {
 	int data;
@@ -49,7 +50,7 @@ int fifo8_get(struct FIFO8 *fifo)
 	return data;
 }
 
-int fifo8_status(struct FIFO8 *fifo)
+int fifo32_status(struct FIFO32 *fifo)
 /* �ǂ̂��炢�f�[�^�����܂��Ă��邩��񍐂��� */
 {
 	return fifo->size - fifo->free;
