@@ -1,10 +1,10 @@
 ; naskfunc
 ; TAB=4
 
-[FORMAT "WCOFF"]				; 僆僽僕僃僋僩僼傽僀儖傪嶌傞儌乕僪	
-[INSTRSET "i486p"]				; 486偺柦椷傑偱巊偄偨偄偲偄偆婰弎
-[BITS 32]						; 32價僢僩儌乕僪梡偺婡夿岅傪嶌傜偣傞
-[FILE "naskfunc.nas"]			; 僜乕僗僼傽僀儖柤忣曬
+[FORMAT "WCOFF"]				; �I�u�W�F�N�g�t�@�C������郂�[�h	
+[INSTRSET "i486p"]				; 486�̖��߂܂Ŏg�������Ƃ����L�q
+[BITS 32]						; 32�r�b�g���[�h�p�̋@�B�����点��
+[FILE "naskfunc.nas"]			; �\�[�X�t�@�C�������
 
 		GLOBAL	_io_hlt, _io_cli, _io_sti, _io_stihlt
 		GLOBAL	_io_in8,  _io_in16,  _io_in32
@@ -12,9 +12,11 @@
 		GLOBAL	_io_load_eflags, _io_store_eflags
 		GLOBAL	_load_gdtr, _load_idtr
 		GLOBAL	_load_cr0, _store_cr0
+		GLOBAL	_load_tr
 		GLOBAL	_asm_inthandler20, _asm_inthandler21
 		GLOBAL	_asm_inthandler27, _asm_inthandler2c
 		GLOBAL	_memtest_sub
+		GLOBAL	_taskswitch4
 		EXTERN	_inthandler20, _inthandler21
 		EXTERN	_inthandler27, _inthandler2c
 
@@ -73,15 +75,16 @@ _io_out32:	; void io_out32(int port, int data);
 		RET
 
 _io_load_eflags:	; int io_load_eflags(void);
-		PUSHFD		; PUSH EFLAGS 偲偄偆堄枴
+		PUSHFD		; PUSH EFLAGS �Ƃ����Ӗ�
 		POP		EAX
 		RET
 
 _io_store_eflags:	; void io_store_eflags(int eflags);
 		MOV		EAX,[ESP+4]
 		PUSH	EAX
-		POPFD		; POP EFLAGS 偲偄偆堄枴
+		POPFD		; POP EFLAGS �Ƃ����Ӗ�
 		RET
+
 _load_gdtr:		; void load_gdtr(int limit, int addr);
 		MOV		AX,[ESP+4]		; limit
 		MOV		[ESP+6],AX
@@ -103,6 +106,10 @@ _store_cr0:		; void store_cr0(int cr0);
 		MOV		CR0,EAX
 		RET
 
+_load_tr:		; void load_tr(int tr);
+		LTR		[ESP+4]			; tr
+		RET
+
 _asm_inthandler20:
 		PUSH	ES
 		PUSH	DS
@@ -118,7 +125,7 @@ _asm_inthandler20:
 		POP		DS
 		POP		ES
 		IRETD
-		
+
 _asm_inthandler21:
 		PUSH	ES
 		PUSH	DS
@@ -198,4 +205,8 @@ mts_fin:
 		POP		EBX
 		POP		ESI
 		POP		EDI
+		RET
+
+_taskswitch4:	; void taskswitch4(void);
+		JMP		4*8:0
 		RET
